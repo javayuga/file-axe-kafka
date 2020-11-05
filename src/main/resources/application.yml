@@ -3,7 +3,19 @@ spring:
     bootstrap-servers: localhost:9092
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    defaultTopic: keyed-value
+    defaultTopic: default
+    stringTopic: string-topic
+    objectTopic: object-topic
+    fileUploads: file-uploads
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 springdoc:
   version: @springdoc.version@
+
+storage:
+  location: "upload"
