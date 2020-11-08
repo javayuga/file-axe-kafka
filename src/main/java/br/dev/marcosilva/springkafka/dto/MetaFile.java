@@ -11,6 +11,7 @@ import lombok.ToString;
 @ToString
 public class MetaFile {
     private String name;
+    private byte[] content;
     private Long size;
 
 }

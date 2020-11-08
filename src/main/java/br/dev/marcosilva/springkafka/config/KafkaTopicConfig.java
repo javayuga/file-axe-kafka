@@ -25,8 +25,8 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public NewTopic fileUpload() {
-         return new NewTopic(kafkaProperties.getFileUploads(), 1, (short) 1);
+    public NewTopic fileChunks() {
+         return new NewTopic(kafkaProperties.getFileChunks(), 50, (short) 1);
     }
 
     @Bean

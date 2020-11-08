@@ -1,12 +1,24 @@
 spring:
   kafka:
     bootstrap-servers: localhost:9092
+
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+    consumer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acknowledgeOnRecoveryCallback: true
+      maxIdleInterval: 60000
+      maxAttempts: 3
+      concurrency: 3
+
     defaultTopic: default
     stringTopic: string-topic
     objectTopic: object-topic
     fileUploads: file-uploads
+
+    numPartitions: 3
+    fileChunks: file-chunks
 
   servlet:
     multipart:
@@ -18,4 +30,7 @@ springdoc:
   version: @springdoc.version@
 
 storage:
-  location: "upload"
+  location: "storage"
+
+fileaxe:
+  chunkSize: 600000

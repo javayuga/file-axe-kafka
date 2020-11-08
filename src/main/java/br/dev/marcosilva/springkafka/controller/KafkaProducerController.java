@@ -1,10 +1,9 @@
 package br.dev.marcosilva.springkafka.controller;
 
+import br.dev.marcosilva.fileaxe.storage.interfaces.StorageFacade;
 import br.dev.marcosilva.springkafka.dto.MetaFile;
 import br.dev.marcosilva.springkafka.dto.SampleObject;
-import br.dev.marcosilva.springkafka.properties.KafkaProperties;
 import br.dev.marcosilva.springkafka.service.KafkaProducer;
-import br.dev.marcosilva.springkafka.service.facade.StorageFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -71,7 +70,7 @@ public class KafkaProducerController {
             storageFacade.store(file);
             kafkaProducer.sendStringKeyAndFileContainer(
                     key.concat("_").concat(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-yy_HH:mm:ss"))),
-                    new MetaFile(file.getOriginalFilename(), (long) file.getBytes().length));
+                    new MetaFile(file.getOriginalFilename(), file.getBytes(), (long) file.getBytes().length));
 
         }catch (Exception e){
             log.error("exception while sending object value", e);

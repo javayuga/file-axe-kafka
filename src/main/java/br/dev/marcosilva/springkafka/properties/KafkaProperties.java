@@ -9,11 +9,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter
 @Setter
 public class KafkaProperties {
-    @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapAddress;
 
-    private String fileUploads;
     private String stringTopic;
     private String objectTopic;
+    private String fileChunks;
 
 }

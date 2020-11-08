@@ -1,5 +1,11 @@
 package br.dev.marcosilva.springkafka.service;
 
+import br.dev.marcosilva.fileaxe.axe.CSVAxerImpl;
+import br.dev.marcosilva.fileaxe.axe.configuration.FileAxeConfigurations;
+import br.dev.marcosilva.fileaxe.axe.dummy.NoPreAxingAction;
+import br.dev.marcosilva.fileaxe.axe.interfaces.FileAxingStrategy;
+import br.dev.marcosilva.fileaxe.axe.interfaces.FilePreAxingStrategy;
+import br.dev.marcosilva.fileaxe.axe.kafka.SimpleKafkaTopicPost;
 import br.dev.marcosilva.springkafka.dto.MetaFile;
 import br.dev.marcosilva.springkafka.dto.SampleObject;
 import br.dev.marcosilva.springkafka.properties.KafkaProperties;
@@ -13,25 +19,34 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 @Service
 @Slf4j
 @Transactional(transactionManager = "chainedTransactionManager")
 public class KafkaProducer {
     @Autowired
-    KafkaProperties kafkaProperties;
+    private KafkaProperties kafkaProperties;
+
+    @Autowired
+    private FileAxeConfigurations fileAxeConfigurations;
+
+    @Autowired
+    private NoPreAxingAction noPreAxingAction;
+
+    @Autowired
+    private SimpleKafkaTopicPost simpleKafkaTopicPost;
 
     private final KafkaTemplate<String, String> kafkaStringTemplate;
     private final KafkaTemplate<String, SampleObject> kafkaObjectTemplate;
-    private final KafkaTemplate<String, MetaFile> kafkaFileTemplate;
 
     @Autowired
     public KafkaProducer(
             final KafkaTemplate<String, String> kafkaStringTemplate,
-            final KafkaTemplate<String, SampleObject> kafkaObjectTemplate,
-            final KafkaTemplate<String, MetaFile> kafkaFileTemplate) {
+            final KafkaTemplate<String, SampleObject> kafkaObjectTemplate) {
         this.kafkaStringTemplate = kafkaStringTemplate;
         this.kafkaObjectTemplate = kafkaObjectTemplate;
-        this.kafkaFileTemplate = kafkaFileTemplate;
     }
 
     public void sendStringKeyAndValue(String key, String message) {
@@ -70,21 +85,14 @@ public class KafkaProducer {
         });
     }
 
-    public void sendStringKeyAndFileContainer(String key, MetaFile fileContainer) {
-        ListenableFuture<SendResult<String, MetaFile>> future = kafkaFileTemplate.send(
-                kafkaProperties.getFileUploads(), key, fileContainer);
-        future.addCallback(new ListenableFutureCallback<SendResult<String, MetaFile>>() {
+    public void sendStringKeyAndFileContainer(String key, MetaFile fileContainer) throws IOException {
+        CSVAxerImpl.builder()
+                .chunkSize(fileAxeConfigurations.getChunkSize())
+                .filePreAxingStrategy(noPreAxingAction)
+                .fileAxingStrategy(simpleKafkaTopicPost)
+                .build()
+                .processStream(key, new ByteArrayInputStream(fileContainer.getContent()));
 
-            @Override
-            public void onSuccess(SendResult<String, MetaFile> result) {
-                log.info("Sent message=[" + fileContainer + "] with offset=[" + result.getRecordMetadata().offset() + "]");
-            }
-
-            @Override
-            public void onFailure(Throwable ex) {
-                log.error("Unable to send message=[" + fileContainer + "] due to : " + ex.getMessage());
-            }
-        });
     }
 
 
