@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.dev.marcosilva</groupId>
-	<artifactId>spring-kafka</artifactId>
-	<version>0.0.1</version>
-	<name>spring-kafka</name>
-	<description>Kafka sample projects</description>
+	<artifactId>file-axe-kafka</artifactId>
+	<version>0.0.2</version>
+	<name>file-axe-kafka</name>
+	<description>Using Kafka to break down large (CSV) files into smaller chunks for processing</description>
 
 	<properties>
 		<java.version>11</java.version>
