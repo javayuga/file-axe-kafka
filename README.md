@@ -1,4 +1,4 @@
-# spring-kafka
+# file-axe-kafka
 Spring Boot Kafka playground
 
 ## Get Started
