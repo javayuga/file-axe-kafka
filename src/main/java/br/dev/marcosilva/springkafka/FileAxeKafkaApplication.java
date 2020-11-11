@@ -18,10 +18,10 @@ import org.springframework.context.annotation.Bean;
 		"br.dev.marcosilva.fileaxe.axe",
 		"br.dev.marcosilva.fileaxe.storage"})
 @EnableConfigurationProperties({StorageProperties.class, KafkaProperties.class})
-public class SpringKafkaApplication {
+public class FileAxeKafkaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringKafkaApplication.class, args);
+		SpringApplication.run(FileAxeKafkaApplication.class, args);
 	}
 
 	@Bean

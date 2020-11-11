@@ -12,7 +12,7 @@
 	<artifactId>file-axe-kafka</artifactId>
 	<version>0.0.2</version>
 	<name>file-axe-kafka</name>
-	<description>Using Kafka to break down large (CSV) files into smaller chunks for processing</description>
+	<description>Using Spring Boot and Kafka to break down large (CSV) files into smaller chunks for parallel processing</description>
 
 	<properties>
 		<java.version>11</java.version>
@@ -29,6 +29,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
